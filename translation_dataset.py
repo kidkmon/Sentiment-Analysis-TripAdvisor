@@ -14,16 +14,16 @@ def load_data(url, encoding="utf-8"):
     json_format_file = [json.loads(line) for line in dat_file]
 
     df = pd.DataFrame(json_format_file)
-  
+
     return df
 
 
 # função de tradução do comentário
-def translation(com, count, count2, CONSTANTE):  
-    
+def translation(com, count, count2, CONSTANTE):
+
     try:
-        num = 'comment {}'.format(count)  
-        translator = Translator() 
+        num = 'comment {}'.format(count)
+        translator = Translator()
         res = translator.translate(com, dest='en')
         print('\n',res.src)
         print('\n',res.text)
@@ -35,7 +35,7 @@ def translation(com, count, count2, CONSTANTE):
         # a qtd de controle da recursividade está determinada pela constante
         if res.text == com and count2 <= CONSTANTE:
             count2 += 1
-            return translation(com,count, count2, CONSTANTE)          
+            return translation(com,count, count2, CONSTANTE)
         elif count2 >= CONSTANTE:
             print('FALSE - try')
             return False, str(com), str(num)
@@ -54,7 +54,7 @@ def translation(com, count, count2, CONSTANTE):
         # faz recursividade para chamar forçar tradução, até a qtd que a constante determina
         print('\n ERROR - COMMENT {} \n'.format(count))
         count2 += 1
-        if count2 <= CONSTANTE:            
+        if count2 <= CONSTANTE:
             return translation(com,count, count2, CONSTANTE)
         else:
             print('FALSE - except')
@@ -62,7 +62,7 @@ def translation(com, count, count2, CONSTANTE):
 
     return True, str(com), str(num)
 
-    
+
 
 
 if __name__ == "__main__":
@@ -70,12 +70,15 @@ if __name__ == "__main__":
     #dataframe
     df = load_data(url="http://tiagodemelo.info/datasets/dataset-v2.dat")
 
-    # corte do dataset - especificação de quais linhas usarei  
+    # corte do dataset - especificação de quais linhas usarei
     # diferente do python puro, neste método a chave inicial e final estarão presente no resultado
-    df = df.loc[0:34000]
+    # o init representa a posição de onde começará o dataframe
+    # fiz o init para controlar o fatiamento e o contador que controla a posição dos comentários
+    init = 0
+    df = df.loc[init:34000]
 
-    # contador que controla a poisção do comentário
-    count = 1
+    # contador que controla a posição do comentário
+    count = init
     # constante que determina o limite de recursividade
     CONSTANTE = 50
 
@@ -129,6 +132,3 @@ if __name__ == "__main__":
 
 #salvando em csv
 #df.to_csv('dataset_translated.csv')
-
-
-

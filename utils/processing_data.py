@@ -28,3 +28,11 @@ def get_address_df():
   address_group["address"] = address_group[columns].apply(lambda value: " ".join(value), axis=1)
 
   return address_group
+
+
+def get_user_location():
+  df = load_data()
+
+  user_location = df.groupby(["userLocation"]).size().reset_index()
+  
+  return user_location["userLocation"][4000:]

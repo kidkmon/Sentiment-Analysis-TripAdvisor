@@ -2,15 +2,15 @@ import requests
 import pandas as pd
 
 from pandas import json_normalize
-from utils import get_address_df
+from utils import get_address_df, get_user_location
 from config import KEY, BASE_URL
 
-address_df = get_address_df()
+address_df = get_user_location()
 cont = 0
 
 print("INICIANDO COLETA DE ENDEREÇO")
 
-for address in address_df["address"]:
+for address in address_df:
     cont = cont + 1
 
     print("QUANTIDADE DE ENDEREÇOS COLETADOS: ", cont)
@@ -23,11 +23,11 @@ for address in address_df["address"]:
         state = results["results"][0]["address_components"][4]["long_name"]
         location = results["results"][0]["geometry"]["location"]
 
-        with open('data/address.txt', 'a', encoding="utf-8") as f:
-            f.write(city + ',' + state + ',' +  str(location["lat"]) + ',' + str(location["lng"]) + '\n')
-            f.close()
+        # with open('data/user/address_user_5.txt', 'a', encoding="utf-8") as f:
+        #     f.write(city + ',' + state + ',' +  str(location["lat"]) + ',' + str(location["lng"]) + '\n')
+        #     f.close()
 
-        print(location)
+        print(results)
     except:
 
         print("FALHA AO GERAR COORDENADAS")
